@@ -24,6 +24,8 @@ fire_plus = {
 dofile(minetest.get_modpath(minetest.get_current_modname()) .. "/api.lua")
 
 local time = 0
+local img_num = 0
+local img_num_max = 7
 minetest.register_globalstep(function(dtime)
 	time = time + dtime
 
@@ -40,6 +42,25 @@ minetest.register_globalstep(function(dtime)
 
 		if fire_plus.burning[name] then
 
+			-- change HUD to next image to simulate animation
+			local img_name = "fire_basic_flame_"..img_num..".png"
+			--minetest.log(dump(img_name))
+			player:hud_remove(fire_plus.burning[name].hud_id)
+			fire_plus.burning[name].hud_id = player:hud_add({
+					hud_elem_type = "image",
+					position  = {x = 0.5, y = 0.95},
+					offset    = {x = 0, y = 0},
+					text      = img_name,
+					alignment = -1,
+					scale     = {x = 100, y = 32},
+					number    = 0xFFFFFF,
+				})
+			if img_num >= img_num_max then
+				img_num = 0
+			else
+				img_num = img_num + 1
+			end
+			
 			local nodename = minetest.get_node(player:get_pos()).name
 			local nodename_head = minetest.get_node(vector.add(player:get_pos(),
 					vector.new(0, 1, 0))).name
