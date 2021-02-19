@@ -68,8 +68,27 @@ function fire_plus.burn_player(player, burns, damage, not_initial)
 				maxexptime = 1,
 				minsize = 3,
 				maxsize = 3,
-				texture = "fire_basic_flame.png",
+				texture = "smoke_puff.png",
 				collisiondetection = true,
+				glow = 0,
+				attached = player,
+			}),
+			particlespawner_id2 = minetest.add_particlespawner({
+				amount = 5,
+				time = 0,
+				minpos = vector.new(0, 0.5, -0.3),
+				maxpos = vector.new( 0, 0.5, 0.3),
+				minvel = {x = 0, y = 0, z = 0},
+				maxvel = {x =  0, y = 0, z =  0},
+				minacc = {x =  0, y = 0, z =  0},
+				maxacc = {x =  0, y = 0, z =  0},
+				minexptime = 0.5,
+				maxexptime = 1,
+				minsize = 10,
+				maxsize = 10,
+				texture = "fire_basic_flame_animated.png",
+				animation = {type="vertical_frames", aspect_w=16, aspect_h=16, length = 1,},
+				collisiondetection = false,
 				glow = minetest.LIGHT_MAX,
 				attached = player,
 			})
@@ -120,6 +139,7 @@ function fire_plus.extinguish_player(player)
 	end
 
 	minetest.delete_particlespawner(fire_plus.burning[name].particlespawner_id)
-
+	minetest.delete_particlespawner(fire_plus.burning[name].particlespawner_id2)
+	
 	fire_plus.burning[name] = nil
 end
